@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Sale
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid mt-4 px-5">
+    <div class="row justify-content-center">
+        <div class="card p-3 m-3">
+            <div id="sale-terminal">
+
+            </div>
+            <div class="justify-content-left">
+                <p class="m-0">Click each button for one scoop of dough</p>
+            </div>
+            <div class="btn-group mb-5" role="group" aria-label="Basic outlined example">
+                {% for dough in doughs %}
+                    <button type="button" value="{{ dough.price_per }}" class="btn btn-outline-primary dough-btn">{{ dough.type }}</button>
+                {% endfor %}
+            </div>
+
+            <div class="card-header">
+                Active Doughs
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Dough</th>
+                    <th scope="col">Amount Left</th>
+                    <th scope="col">Pice Per</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for dough in doughs %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ dough.type }}</td>
+                            <td>{{ dough.qty|round(2, 'floor') }} Gal</td>
+                            <td>{{ "${:,.2f}".format(dough.price_per) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<form id="saleForm" name="saleForm" action="" style="display: none;" method="post">
+    {% for dough in doughs %}
+        <input value="0" class="doughInput" type="number" name="{{ dough.type }}">
+    {% endfor %}
+    <input class="doughInput" type="number" name="total">
+</form>
+<script>
+
+    Number.prototype.format = function(n, x) {
+        var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+        return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+    };
+
+    const buttons = [].slice.call(document.getElementsByClassName("dough-btn"))
+    buttons.forEach(button => {
+        button.addEventListener('click', e => addLi(button.innerText, Number(button.value)))
+      })
+    let total = 0
+    function addLi(dough, value) {
+        const formatDough = dough.replace(/\s+/g, '-').toLowerCase()
+        let saleTerminal = document.getElementById('sale-terminal')
+        if(!document.getElementById("list")){
+            saleTerminal.innerHTML = `
+            <h3>Current Sale</h3>
+            <ul id="list">
+
+            </ul>
+            <div class="d-flex align-items-end flex-column">
+                <p>Total: $<span id="total">${total}</span></p>
+                <button onClick="completeSale()" class="btn btn-outline-success mb-2">Complete Sale</button>
+                <button onClick="cancelSale()" class="btn btn-outline-danger">Cancel Sale</button>
+            </div>
+            `
+        }
+        let ul = document.getElementById("list");
+        let htmlTotal = document.getElementById("total")
+        htmlTotal.innerText = (Number(htmlTotal.innerText)+value).toFixed(2)
+        doughInput = document.getElementsByName(dough)[0]
+        doughInput.value = Number(doughInput.value)+1
+        totalInput = document.getElementsByName('total')[0]
+        totalInput.value = (Number(htmlTotal.innerText))
+        if(!document.getElementById(formatDough)){
+            let li = document.createElement("li");
+            li.setAttribute("id", formatDough);
+            li.appendChild(document.createTextNode(`1 scoop of ${dough}`));
+            ul.appendChild(li);
+        }else{
+            let li = document.getElementById(formatDough)
+            let doughNumber = Number(li.innerText.split(' ')[0])
+            li.innerHTML = `${doughNumber+=1} scoops of ${dough}`
+        }
+      }
+
+      function completeSale(){
+        let saleForm = document.getElementById("saleForm")
+        saleForm.submit()
+      }
+
+      function cancelSale(){
+        let saleTerminal = document.getElementById('sale-terminal')
+        saleTerminal.innerHTML = ""
+        let doughInputs = [].slice.call(document.getElementsByClassName("doughInput"))
+        doughInputs.forEach((input)=>input.value = 0)
+      }
+
+
+</script>
+{% endblock body %}

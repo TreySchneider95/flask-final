@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Manage
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid mt-4 px-5">
+    <div class="d-flex">
+        <h1 class="pe-3 m-0">Manage Doughs</h1>
+        <form action="" method="post">
+            <div class="input-group mb-3">
+                <div class="me-2">
+                    <label for="exampleInputEmail1" class="form-label">Type</label>
+                    <input name="type" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="me-2">
+                    <label for="exampleInputEmail1" class="form-label">Price Per Scoop</label>
+                    <input name="price_per" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div>
+                    <label for="exampleInputEmail1" class="form-label">Qty (Gallons)</label>
+                    <input name="qty" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="d-flex mt-1">
+                    <button type="submit" class="btn btn-primary align-self-end">Add Dough</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row justify-content-center">
+        <div class="card p-3 m-3">
+            <div class="card-header">
+                Active Doughs
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Dough</th>
+                    <th scope="col">Time Active</th>
+                    <th scope="col">Amount Left</th>
+                    <th scope="col">Pice Per</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for dough in active_doughs %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ dough.type }}</td>
+                            <td>{{ (now - dough.date_made).days }} Days</td>
+                            <td>{{ dough.qty|round(2, 'floor') }} Gal</td>
+                            <td>{{ "${:,.2f}".format(dough.price_per) }}</td>
+                            <td><a href="{{ url_for('edit_dough', id=dough.id) }}">Edit</a> <a href="{{ url_for('change_dough_status', id=dough.id) }}">Retire</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="card p-3 m-3">
+            <div class="card-header">
+                Past Doughs
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Dough</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for dough in past_doughs %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ dough.type }}</td>
+                            <td><a href="{{ url_for('change_dough_status', id=dough.id) }}">Make Active</a> <a onclick="return confirm('Are you sure you want to delete this dough?');" href="{{ url_for('delete_dough', id=dough.id) }}">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock body %}

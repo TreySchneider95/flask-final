@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}
+  User Sales
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid mt-4 px-5">
+    <div class="row justify-content-center">
+        <div class="accordion">
+            {% for user in users %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{user.id}}" aria-expanded="true" aria-controls="collapse{{user.id}}">
+                            {{ user.first_name }} {{ user.last_name }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{user.id}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Sale Date</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Doughs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sale in user.sales %}
+                                        <tr>
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ sale.date.strftime('%Y-%m-%d') }}</td>
+                                        <td>{{ "${:,.2f}".format(sale.total) }}</td>
+                                        <td>
+                                            {% for dough in sale.doughs %}
+                                                {{ dough.type }}{{ "," if not loop.last else "" }}
+                                            {% endfor %}
+                                        </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Edit Dough
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 70vh;">
+    <div class="card">
+      <div class="card-header mb-2">
+        <h3>Edit Dough</h3>
+      </div>
+      <form class="container" action="" method="post">
+        <div class="mb-2">
+            <label for="exampleInputEmail1" class="form-label">Type</label>
+            <input name="type" type="text" class="form-control" value="{{ dough.type }}">
+        </div>
+        <div class="input-group mb-3">
+            <div class="me-2">
+                <label for="exampleInputEmail1" class="form-label">Price Per</label>
+                <input name="price_per" type="text" class="form-control" value="{{ dough.price_per }}">
+            </div>
+            <div>
+                <label for="exampleInputEmail1" class="form-label">Qty (Gallons)</label>
+                <input name="qty" type="text" class="form-control" value="{{ dough.qty }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Update</button>
+      </form>
+    </div>
+</div>
+{% endblock body %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Home
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid mt-4 px-5">
+    <div class="row justify-content-center">
+        <a href="{{ url_for('sale') }}" style="width: 140px;" class="btn btn-success">Start Selling!</a>
+        <div class="card p-3 m-3">
+            <div class="card-header">
+                Active Doughs
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Dough</th>
+                    <th scope="col">Time Active</th>
+                    <th scope="col">Amount Left</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for dough in doughs %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td>{{ dough.type }}</td>
+                            <td>{{ (now - dough.date_made).days }} Days</td>
+                            <td>{{ dough.qty|round(2, 'floor') }} Gal</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{ url_for('manage') }}">Manage Doughs</a>
+        </div>
+    </div>
+</div>
+{% endblock body %}

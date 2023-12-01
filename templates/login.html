@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Log in
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 60vh;">
+  <div class="card">
+    <div class="card-header mb-2">
+      <h3>Log In</h3>
+    </div>
+    <form class="container" action="" method="post">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input name="password" type="password" class="form-control" id="exampleInputPassword1" style="width: 300px;">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">Submit</button>
+    </form>
+    <a class="p-2" href="{{ url_for('register') }}">New user? Register here</a>
+  </div>
+</div>
+{% endblock body %}
